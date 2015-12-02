@@ -34,21 +34,23 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.ExpenseManager;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 import static lk.ac.mrt.cse.dbs.simpleexpensemanager.Constants.EXPENSE_MANAGER;
+
 /**
  *
  */
 public class ExpenseLogsFragment extends Fragment {
     private ExpenseManager currentExpenseManager;
 
+    public ExpenseLogsFragment() {
+    }
+
     public static ExpenseLogsFragment newInstance(ExpenseManager expenseManager) {
         ExpenseLogsFragment expenseLogsFragment = new ExpenseLogsFragment();
         Bundle args = new Bundle();
         args.putSerializable(EXPENSE_MANAGER, expenseManager);
         expenseLogsFragment.setArguments(args);
-        return expenseLogsFragment;
-    }
 
-    public ExpenseLogsFragment() {
+        return expenseLogsFragment;
     }
 
     @Override
