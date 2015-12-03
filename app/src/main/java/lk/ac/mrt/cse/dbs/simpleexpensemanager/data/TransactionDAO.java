@@ -16,6 +16,7 @@
 
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 /**
  * TransactionDAO interface can be used to access the log of transactions requested by the user.
  */
-public interface TransactionDAO {
+public interface TransactionDAO extends Serializable {
 
     /***
      * Log the transaction requested by the user.
