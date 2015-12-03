@@ -17,25 +17,30 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.db.DatabaseHandler;
 /**
  * Created by Shehan on 12/2/2015.
  */
+
+/**
+ * This is the concrete implementation of AccountDAO interface which uses sqlite as the database to manage data
+ */
 public class DBAccountDAO implements AccountDAO {
     public DBAccountDAO() {
-
     }
 
     @Override
     public List<String> getAccountNumbersList() {
-
-        ArrayList<String> accountNumbers = new ArrayList<>();
+        ArrayList<String> accountNumbers = new ArrayList<>(); //Store the account numbers
 
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
             db = DatabaseHandler.getWritableDatabase();
 
-            cursor = db.query(DatabaseHandler.ACCOUNT_TABLE, new String[]{DatabaseHandler.KEY_ACCOUNT_NO}, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
+            cursor = db.query(DatabaseHandler.ACCOUNT_TABLE, new String[]{DatabaseHandler.KEY_ACCOUNT_NO}, null, null, null, null, null); // Get account numbers from the database
+            if (cursor.moveToFirst()) { // If records are found process them
                 do {
-                    accountNumbers.add(cursor.getString(0));
+                     /*
+                    cursor.getString(0) - account number
+                     */
+                    accountNumbers.add(cursor.getString(0));// Add account numbers to the ArrayList
                 } while (cursor.moveToNext());
             }
         } catch (SQLiteException e) {
@@ -59,9 +64,15 @@ public class DBAccountDAO implements AccountDAO {
         try {
             db = DatabaseHandler.getWritableDatabase();
 
-            cursor = db.query(DatabaseHandler.ACCOUNT_TABLE, null, null, null, null, null, null);
-            if (cursor.moveToFirst()) {
+            cursor = db.query(DatabaseHandler.ACCOUNT_TABLE, null, null, null, null, null, null);// Get all accounts from the database
+            if (cursor.moveToFirst()) {// If records are found process them
                 do {
+                    /*
+                    cursor.getString(0) -  account number
+                     cursor.getString(1) -  bank name
+                     cursor.getString(2) -  account holder name
+                     cursor.getString(3) -  balance
+                     */
                     Account account = new Account(cursor.getString(0), cursor.getString(1), cursor.getString(2), Double.parseDouble(cursor.getString(3)));
                     accountList.add(account);
                 } while (cursor.moveToNext());
@@ -86,13 +97,19 @@ public class DBAccountDAO implements AccountDAO {
         try {
             db = DatabaseHandler.getWritableDatabase();
 
-            cursor = db.query(DatabaseHandler.ACCOUNT_TABLE, null, DatabaseHandler.KEY_ACCOUNT_NO + " = ?", new String[]{accountNo}, null, null, null);
+            cursor = db.query(DatabaseHandler.ACCOUNT_TABLE, null, DatabaseHandler.KEY_ACCOUNT_NO + " = ?", new String[]{accountNo}, null, null, null);// Get specific account using account number
             if (cursor != null) {
                 cursor.moveToFirst();
+                 /*
+                     cursor.getString(0) -  account number
+                     cursor.getString(1) -  bank name
+                     cursor.getString(2) -  account holder name
+                     cursor.getString(3) -  balance
+                  */
                 return new Account(cursor.getString(0), cursor.getString(1), cursor.getString(2), Double.parseDouble(cursor.getString(3)));
 
             } else {
-                String msg = "Account " + accountNo + " is invalid.";
+                String msg = "Account " + accountNo + " is invalid."; //If account not found
                 throw new InvalidAccountException(msg);
             }
         } catch (SQLiteException e) {
@@ -122,7 +139,7 @@ public class DBAccountDAO implements AccountDAO {
             values.put(DatabaseHandler.KEY_BALANCE, account.getBalance()); // initial balance
 
             // Inserting Row
-            db.insert(DatabaseHandler.ACCOUNT_TABLE, null, values);
+            db.insert(DatabaseHandler.ACCOUNT_TABLE, null, values); //Add new account to database
         } catch (SQLiteException e) {
             e.printStackTrace();
         } finally {
@@ -139,7 +156,7 @@ public class DBAccountDAO implements AccountDAO {
         try {
             db = DatabaseHandler.getWritableDatabase();
 
-            db.delete(DatabaseHandler.ACCOUNT_TABLE, DatabaseHandler.KEY_ACCOUNT_NO + " = ?", new String[]{accountNo});
+            db.delete(DatabaseHandler.ACCOUNT_TABLE, DatabaseHandler.KEY_ACCOUNT_NO + " = ?", new String[]{accountNo}); //Remove account specified by account number
 
         } catch (SQLiteException e) {
             e.printStackTrace();
@@ -154,25 +171,24 @@ public class DBAccountDAO implements AccountDAO {
     public void updateBalance(String accountNo, ExpenseType expenseType, double amount) throws InvalidAccountException {
         SQLiteDatabase db = null;
         try {
-            Account account = getAccount(accountNo);
-            if (account != null) {
+            Account account = getAccount(accountNo); //Get the account details from database
+            if (account != null) { //If the account exist then proceed
                 db = DatabaseHandler.getWritableDatabase();
 
                 ContentValues values = new ContentValues();
                 switch (expenseType) {
                     case EXPENSE:
-                        if (account.getBalance() - amount < 0) {
-                            String msg = "Account balance " + accountNo + " would be < 0.";
-                            throw new InvalidAccountException(msg);
-                        }
-                        values.put(DatabaseHandler.KEY_BALANCE, account.getBalance() - amount);
+                        //if (account.getBalance() - amount < 0) { // check if new balance is >0
+                        //    String msg = "Account balance " + accountNo + " would be < 0.";
+                        //    throw new InvalidAccountException(msg);
+                        //}
+                        values.put(DatabaseHandler.KEY_BALANCE, account.getBalance() - amount);// If type is expense then reduce amount from account
                         break;
                     case INCOME:
-                        values.put(DatabaseHandler.KEY_BALANCE, account.getBalance() + amount);
+                        values.put(DatabaseHandler.KEY_BALANCE, account.getBalance() + amount);// If type is income then add amount to account
                         break;
                 }
-                // updating row
-                db.update(DatabaseHandler.ACCOUNT_TABLE, values, DatabaseHandler.KEY_ACCOUNT_NO + " = ?", new String[]{accountNo});
+                db.update(DatabaseHandler.ACCOUNT_TABLE, values, DatabaseHandler.KEY_ACCOUNT_NO + " = ?", new String[]{accountNo});// Update account balance
             }
 
         } catch (SQLiteException e) {

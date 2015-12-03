@@ -12,7 +12,13 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   ~
-  -->
+  --><!--
+  ~
+  ~ Shehan
+  ~ The following line is added to get the context of the application available to non activity classes
+    android:name=".MyApplication"
+  ~
+ -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="lk.ac.mrt.cse.dbs.simpleexpensemanager">

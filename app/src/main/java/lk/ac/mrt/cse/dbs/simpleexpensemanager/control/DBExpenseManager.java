@@ -10,6 +10,9 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.DBTransactionDAO;
  */
 public class DBExpenseManager extends ExpenseManager {
 
+    /**
+     * This is the concrete class of ExpenseManager
+     */
     public DBExpenseManager() {
         setup();
     }
@@ -17,13 +20,13 @@ public class DBExpenseManager extends ExpenseManager {
     @Override
     public void setup() {
 
-        //initailize transactionsHolder
-        TransactionDAO dbTransactionDAO = new DBTransactionDAO();
-        setTransactionsDAO(dbTransactionDAO);
-
         //initailize accountsHolder
-        AccountDAO dbAccountDAO = new DBAccountDAO();
+        AccountDAO dbAccountDAO = new DBAccountDAO();// DBTransactionDAO uses sqlite to manage accounts
         setAccountsDAO(dbAccountDAO);
+
+        //initailize transactionsHolder
+        TransactionDAO dbTransactionDAO = new DBTransactionDAO();// DBTransactionDAO uses sqlite to manage transactions
+        setTransactionsDAO(dbTransactionDAO);
 
     }
 }
