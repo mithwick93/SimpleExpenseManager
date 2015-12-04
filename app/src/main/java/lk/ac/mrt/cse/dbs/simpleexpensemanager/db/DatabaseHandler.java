@@ -39,6 +39,7 @@ public class DatabaseHandler {
     public static final String KEY_BALANCE = "balance";
 
     // TRANSACTION Table Columns names
+    public static final String KEY_TRANSACTION_ID= "transaction_id";
     public static final String KEY_TRANSACTION_ACCOUNT_NO = "account_no";
     public static final String KEY_TRANSACTION_DATE = "trans_date";
     public static final String KEY_TRANSACTION_TYPE = "trans_type";

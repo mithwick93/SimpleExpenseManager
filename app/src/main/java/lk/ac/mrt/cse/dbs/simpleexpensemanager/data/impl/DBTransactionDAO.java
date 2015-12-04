@@ -109,7 +109,7 @@ public class DBTransactionDAO implements TransactionDAO {
         try {
             db = DatabaseHandler.getWritableDatabase();
 
-            cursor = db.query(DatabaseHandler.TRANSACTION_TABLE, null, null, null, null, null, DatabaseHandler.KEY_TRANSACTION_DATE + " DESC", String.valueOf(limit)); //Get specified number of transactions , order by descending order of date
+            cursor = db.query(DatabaseHandler.TRANSACTION_TABLE, null, null, null, null, null, DatabaseHandler.KEY_TRANSACTION_ID + " DESC", String.valueOf(limit)); //Get specified number of transactions , order by descending order of date
             if (cursor.moveToFirst()) {
                 do {
                     Transaction transaction = new Transaction(DatabaseHandler.getTimeValue(cursor.getString(2)), cursor.getString(1), null, Double.parseDouble(cursor.getString(4)));
